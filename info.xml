@@ -1,0 +1,264 @@
+<?xml version='1.0' encoding="ISO-8859-1"?>
+<jtlshop3plugin>
+<Name>Kundengalerie</Name>
+<Description>Ermöglicht dem Kunden den Upload eigener Bilder zu einem Produkt</Description>
+<Author>Marcel Besancon</Author>
+<URL>http://www.codezombie.de</URL>
+<XMLVersion>100</XMLVersion>
+<ShopVersion>311</ShopVersion>
+<PluginID>cz_kundengalerie</PluginID>
+<Install>
+    <Version nr="100">
+        <SQL>sql.sql</SQL>
+        <CreateDate>2012-02-10</CreateDate>
+    </Version>
+    <Version nr="101">
+        <SQL>sql.sql</SQL>
+        <CreateDate>2012-03-02</CreateDate>
+    </Version>
+    <Version nr="102">
+        <SQL>sql.sql</SQL>
+        <CreateDate>2012-05-15</CreateDate>
+    </Version>
+    <Version nr="103">
+        <CreateDate>2012-06-19</CreateDate>
+    </Version>
+    <Version nr="104">
+        <CreateDate>2012-10-04</CreateDate>
+    </Version>
+    <Hooks>
+        <Hook id="140">hook140_kundengalerie.php</Hook>
+        <Hook id="132">hook132_kundengalerie.php</Hook>
+        <Hook id="75">hook75_kundengalerie.php</Hook>
+    </Hooks>
+    <Adminmenu>
+        <Customlink sort="0">
+            <Name>Freizuschaltende Bilder</Name>
+            <Filename>admin_kundengalerie_freischalten.php</Filename>
+        </Customlink>
+        <Customlink sort="1">
+            <Name>Freigeschaltete Bilder</Name>
+            <Filename>admin_kundengalerie_aktive.php</Filename>
+        </Customlink>
+        <Customlink sort="1">
+            <Name>Donate</Name>
+            <Filename>admin_kundengalerie_donate.php</Filename>
+        </Customlink>
+        <Settingslink sort="3">
+        <Name>Einstellungen</Name>
+        	<Setting type="selectbox" initialValue="y" sort="0" conf="Y">
+                <Name>Kundengalerie global aktivieren?</Name>
+                <Description>Bestimmt ob die Kundengalerie standardmäßig immer aktiv ist oder nicht. Wenn nicht muss die Galerie per Funktionsattribut aktiviert oder deaktiviert werden.</Description>
+                <ValueName>kundengalerie_globalaktiv</ValueName>
+                <SelectboxOptions>
+                    <Option value="y" sort="0">Ja</Option>
+                    <Option value="n" sort="1">Nein</Option>
+                </SelectboxOptions>
+            </Setting>
+            <Setting type="selectbox" initialValue="n" sort="1" conf="Y">
+                <Name>Upload nur wenn Artikel gekauft wurde?</Name>
+                <Description>Darf der Kunde nur ein Bild hochladen wenn er den Artikel auch im Shop gekauft hat?</Description>
+                <ValueName>kundengalerie_gekauft</ValueName>
+                <SelectboxOptions>
+                    <Option value="y" sort="0">Ja</Option>
+                    <Option value="n" sort="1">Nein</Option>
+                </SelectboxOptions>
+            </Setting>
+            <Setting type="selectbox" initialValue="y" sort="2" conf="Y">
+                <Name>Freischaltung erforderlich?</Name>
+                <Description>Sollen Bilder erst freigeschaltet werden oder sind diese sofort sichtbar?</Description>
+                <ValueName>kundengalerie_moderation</ValueName>
+                <SelectboxOptions>
+                    <Option value="y" sort="0">Ja</Option>
+                    <Option value="n" sort="1">Nein</Option>
+                </SelectboxOptions>
+            </Setting>
+            <Setting type="selectbox" initialValue="n" sort="3" conf="Y">
+                <Name>Kupons oder Guthaben als Belohnung?</Name>
+                <Description>Sollen Kunden für Uploads mit Kupons oder Guthaben belohnt werden?</Description>
+                <ValueName>kundengalerie_kupon</ValueName>
+                <SelectboxOptions>
+                    <Option value="y" sort="1">Kupons</Option>
+                    <Option value="g" sort="2">Guthaben</Option>
+                    <Option value="n" sort="0">Nein</Option>
+                </SelectboxOptions>
+            </Setting>
+            <Setting type="text" initialValue="3.00" sort="4" conf="Y">
+                <Name>Standardwert für Kupon</Name>
+                <Description>Dies ist der Wert für einen Belohnungskupon</Description>
+                <ValueName>kundegalerie_kuponwert</ValueName>
+            </Setting>
+            <Setting type="text" initialValue="30.00" sort="5" conf="Y">
+                <Name>Standardwert für den Mindestbestellwert</Name>
+                <Description>Dies ist der Wert für den Mindestbestellwert</Description>
+                <ValueName>kundegalerie_mindestbestellwert</ValueName>
+            </Setting>
+            <Setting type="text" initialValue="10" sort="6" conf="Y">
+                <Name>Kuponanzahl pro Monat</Name>
+                <Description>Standardwert für die maximale Anzahl an Kupons pro Kunde und Monat</Description>
+                <ValueName>kundengalerie_kuponmax</ValueName>
+            </Setting>
+            <Setting type="selectbox" initialValue="tiny" sort="7" conf="Y">
+                <Name>Template-Basis</Name>
+                <Description>Auswahl auf welchem Grund-Template das genutzte Template basiert. Alternativ kann ein eigenes DIV als Container genutzt werden</Description>
+                <ValueName>kundengalerie_templatebasis</ValueName>
+                <SelectboxOptions>
+                    <Option value="tiny" sort="1">JTL-Tiny</Option>
+                    <Option value="modi" sort="2">ModiArt WAI</Option>
+                    <Option value="div" sort="3">In eigenem DIV</Option>
+                </SelectboxOptions>
+            </Setting>
+            <Setting type="text" initialValue="kundengalerie" sort="8" conf="Y">
+                <Name>Name des zu nutzenden DIVs</Name>
+                <Description>Ist die Option aktiviert werden die Inhalte in dieses DIV eingespielt</Description>
+                <ValueName>kundengalerie_div</ValueName>
+            </Setting>
+            <Setting type="text" initialValue="16" sort="9" conf="Y">
+                <Name>Bilder pro Seite</Name>
+                <Description>Anzahl der Bilder pro Seite in der Frontend-Galerie</Description>
+                <ValueName>kundengalerie_anzahl_bilder</ValueName>
+            </Setting>
+        </Settingslink>
+    </Adminmenu>
+    <Emailtemplate>
+        <Template>
+            <Name>Kupon-Email für Bild-Upload</Name>
+            <Description>Emailvorlage für den Dankeschön-Kupon</Description>
+            <Type>text</Type>
+            <ModulId>czkundengalerie</ModulId>
+            <Active>Y</Active>
+            <AKZ>N</AKZ>
+            <AGB>N</AGB>
+            <WRB>N</WRB>
+            <TemplateLanguage iso="GER">
+                <Subject>Ihr Bild-Upload</Subject>
+                <ContentHtml><![CDATA[Sehr geehrter Kunde,<br />
+<br />
+vielen Dank Für Ihren Upload in unsere Kundengalerie. Als Dankeschön erhalten Sie mit dieser Email Ihren persönlichen Kupon. Der Kupon hat einen Wert von {$oPluginMail->Kupon->fWert} &euro; und kann mithilfe des Codes {$oPluginMail->Kupon->cCode} eingelöst werden.<br />
+<br />
+<br /> ]]>
+                </ContentHtml>
+                <ContentText><![CDATA[Sehr geehrter Kunde,
+                
+vielen Dank Für Ihren Upload in unsere Kundengalerie. Als Dankeschön erhalten Sie mit dieser Email Ihren persönlichen Kupon. Der Kupon hat einen Wert von {$oPluginMail->Kupon->fWert} &euro; und kann mithilfe des Codes {$oPluginMail->Kupon->cCode} eingelöst werden.]]>
+                </ContentText>
+            </TemplateLanguage>
+        </Template>
+        <Template>
+            <Name>Guthaben-Email für Bild-Upload</Name>
+            <Description>Emailvorlage für ein Dankeschön-Guthaben</Description>
+            <Type>text</Type>
+            <ModulId>czkundengalerieguthaben</ModulId>
+            <Active>Y</Active>
+            <AKZ>N</AKZ>
+            <AGB>N</AGB>
+            <WRB>N</WRB>
+            <TemplateLanguage iso="GER">
+                <Subject>Ihr Bild-Upload</Subject>
+                <ContentHtml><![CDATA[Sehr geehrter Kunde,<br />
+<br />
+vielen Dank Für Ihren Upload in unsere Kundengalerie. Als Dankeschön vermerken wir ein Guthaben in Ihrem Kundenkonto. Das Guthaben hat einen Wert von {$oPluginMail->fWert} &euro;. Der aktuelle Stand Ihres Guthabens beträgt {$oPluginMail->fGuthabenKonto} &euro;.<br />
+<br />
+<br /> ]]>
+                </ContentHtml>
+                <ContentText><![CDATA[Sehr geehrter Kunde,
+                
+vielen Dank Für Ihren Upload in unsere Kundengalerie. Als Dankeschön vermerken wir ein Guthaben in Ihrem Kundenkonto. Das Guthaben hat einen Wert von {$oPluginMail->fWert} EUR. Der aktuelle Stand Ihres Guthabens beträgt {$oPluginMail->fGuthabenKonto} EUR.]]>
+                </ContentText>
+            </TemplateLanguage>
+        </Template>
+    </Emailtemplate>
+    <Locales>
+        <Variable>
+        <Name>cz_kundengalerie_tabtitel</Name>
+        <Description>Beschriftung des Tabs</Description>
+        <VariableLocalized iso="GER">Kundengalerie</VariableLocalized>
+        </Variable>
+        <Variable>
+        <Name>cz_kundengalerie_kommentar</Name>
+        <Description>Beschriftung des Kundenkommentars</Description>
+        <VariableLocalized iso="GER">Kommentar</VariableLocalized>
+        </Variable>
+        <Variable>
+        <Name>cz_kundengalerie_upload_button</Name>
+        <Description>Beschriftung des Upload-Buttons</Description>
+        <VariableLocalized iso="GER">Veröffentlichen</VariableLocalized>
+        </Variable>
+        <Variable>
+        <Name>cz_kundengalerie_anmelden</Name>
+        <Description>Hinweis das Funktion erst nach Anmeldung zur Verfügung steht</Description>
+        <VariableLocalized iso="GER">Bitte melden Sie sich an um Ihr persönliches Bild hochzuladen!</VariableLocalized>
+        </Variable>
+        <Variable>
+        <Name>cz_kundengalerie_kaufen</Name>
+        <Description>Hinweis das Funktion erst nach Kauf zur Verfügung steht</Description>
+        <VariableLocalized iso="GER">Um Ihr persönliches Bild zu dieser Galerie hinzufügen zu können muss der Artikel zunächst gekauft werden</VariableLocalized>
+        </Variable>
+		<Variable>
+        <Name>cz_kundengalerie_bild</Name>
+        <Description>Beschriftung des Bilduploadfeldes</Description>
+        <VariableLocalized iso="GER">Ihr Bild</VariableLocalized>
+        </Variable>
+        <Variable>
+        <Name>cz_kundengalerie_kuponname</Name>
+        <Description>Name für den verwendeten Kupon</Description>
+        <VariableLocalized iso="GER">Dankeschön-Kupon für Bildupload</VariableLocalized>
+        </Variable>
+        <Variable>
+        <Name>cz_kundengalerie_keine_bilder</Name>
+        <Description>Hinweis das noch keine Bilder vorhanden sind</Description>
+        <VariableLocalized iso="GER">Zu diesem Artikel wurden leider noch keine Kunden-Bilder bereitgestellt.</VariableLocalized>
+        </Variable>
+        <Variable>
+        <Name>cz_kundengalerie_upload_success</Name>
+        <Description>Hinweis das das Bild erfolgreich hochgeladen wurde</Description>
+        <VariableLocalized iso="GER">Ihr Bild wurde erfolgreich übertragen.</VariableLocalized>
+        </Variable>
+        <Variable>
+        <Name>cz_kundengalerie_upload_moderation_warten</Name>
+        <Description>Hinweis das das Bild auf Freischaltung wartet</Description>
+        <VariableLocalized iso="GER">Wir prüfen Ihr Bild und werden dieses in Kürze freischalten.</VariableLocalized>
+        </Variable>
+        <Variable>
+        <Name>cz_kundengalerie_upload_error</Name>
+        <Description>Hinweis das es einen Fehler bei der Übertragung gab</Description>
+        <VariableLocalized iso="GER">Leider gab es einen Fehler bei der Übertragung!</VariableLocalized>
+        </Variable>
+        <Variable>
+        <Name>cz_kundengalerie_upload_error_format</Name>
+        <Description>Hinweis das nur .jpeg-Bilder erlaubt sind</Description>
+        <VariableLocalized iso="GER">Für die Galerie sind lediglch Bilder im JPEG-Format nutzbar.</VariableLocalized>
+        </Variable>
+        <Variable>
+        <Name>cz_kundengalerie_confirm_copyright</Name>
+        <Description>Hinweis zur Einwilligung der Veröffentlichung</Description>
+        <VariableLocalized iso="GER">Ich versichere das ich der Urheber dieses Bildes bin und gestatte die Veröffentlichung.</VariableLocalized>
+        </Variable>
+        <Variable>
+        <Name>cz_kundengalerie_konto_ueberschrift</Name>
+        <Description>Überschrift der Auflistung im Kundenkonto</Description>
+        <VariableLocalized iso="GER">Sie können zu den folgenden Artikeln eigene Bilder hinzufügen</VariableLocalized>
+        </Variable>
+    </Locales>
+	<FrontendLink>
+		<Link>
+		<Filename>cz_kundengalerie_frontend.php</Filename> 
+		<Name>Kundengalerie</Name> 
+		<Template>cz_kundengalerie_frontend.tpl</Template> 
+		<VisibleAfterLogin>N</VisibleAfterLogin> 
+		<PrintButton>N</PrintButton>
+		<NoFollow>N</NoFollow>
+		
+		<LinkLanguage iso="GER">
+			<Seo>Kundengalerie</Seo> 
+			<Name>Kundengalerie</Name> 
+			<Title>Unsere Kundengalerie</Title> 
+			<MetaTitle>Unsere Kundengalerie</MetaTitle> 
+			<MetaKeywords>Kundengalerie, Bilder, Kunden, Artikel</MetaKeywords> 
+			<MetaDescription>Sehen Sie in unserer Kundengalerie wie unsere Kunden unsere Produkte verwenden.</MetaDescription>
+		</LinkLanguage>
+		
+		</Link>  
+	</FrontendLink>
+</Install>
+</jtlshop3plugin>

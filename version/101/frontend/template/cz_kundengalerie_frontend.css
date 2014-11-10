@@ -1,0 +1,34 @@
+.cz_kundengalerie_textarea {
+	width:350px;
+	height:100px;
+}
+
+.cz_galerie_formrow {
+	padding-top: 4px;
+	padding-bottom: 4px;
+}
+
+.cz_galerie_formrow label {
+	font-weight:bold;
+}
+
+.cz_galerie_error {
+	background-color: #FF8787;
+	padding:4px;
+	color: #ffffff;
+	text-align:center;
+	font-weight: bold;
+}
+
+.cz_galerie_success {
+	background-color: #33FF99;
+	padding:4px;
+	color: #ffffff;
+	text-align:center;
+	font-weight: bold;
+}
+
+div.kundengalerieBildContainer {
+	float:left;
+	padding:4px;
+}
